@@ -23,7 +23,7 @@ bot.on("message", message => {
     message
     .delete()
     .then(message => {
-      let text = `${message.author} just sent a sticker!`;
+      let text = `${message.author} just sent the sticker ${command}`;
       message.channel.sendFile(stickers[command], "", text);
     })
     .catch(console.error);
