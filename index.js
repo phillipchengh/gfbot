@@ -1,8 +1,7 @@
+require("dotenv").config();
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const stickers = require("./lib/stickers.js");
-
-console.log(stickers);
 
 bot.on("message", message => {
   const prefix = "!";
@@ -23,4 +22,4 @@ bot.on("message", message => {
 
 });
 
-bot.login("MjU1OTIxMTE5Mzc3MzU4ODQ4.Cykr7Q.ymG5rKSK6AOKPiW5hCUyYHcCMJA");
+bot.login(process.env.DISCORD_TOKEN);
