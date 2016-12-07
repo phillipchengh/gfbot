@@ -1,7 +1,7 @@
 require("dotenv").config();
 const Discord = require("discord.js");
 const bot = new Discord.Client();
-const stickers = require("./lib/stickers.js");
+const stickers = require("./lib/aliases.js");
 
 bot.on("message", message => {
   const prefix = "!";
