@@ -10,7 +10,7 @@ bot.on("message", message => {
   if (message.author.bot) return;
 
   if (message.content.startsWith(prefix + "stickerlist")) {
-    let text =  "";
+    const text =  "";
     Object.keys(stickers).forEach(function(alias) {
       text += alias + "\n";
     });
@@ -18,12 +18,12 @@ bot.on("message", message => {
     return;
   }
 
-  let command = message.content.substring(1);
+  const command = message.content.substring(1);
   if (stickers.hasOwnProperty(command)) {
     message
     .delete()
     .then(message => {
-      let text = `${message.author} just sent the sticker ${command}`;
+      const text = `${message.author} just sent the sticker ${command}`;
       message.channel.sendFile(stickers[command], "", text);
     })
     .catch(console.error);
