@@ -1,0 +1,24 @@
+{
+  "name": "gfbot",
+  "version": "1.0.0",
+  "description": "haha memes xD",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phillipchengh/gfbot.git"
+  },
+  "keywords": [
+    "straight",
+    "cash",
+    "homie"
+  ],
+  "author": "phillip",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phillipchengh/gfbot/issues"
+  },
+  "homepage": "https://github.com/phillipchengh/gfbot#readme"
+}
