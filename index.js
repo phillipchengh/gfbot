@@ -9,6 +9,15 @@ bot.on("message", message => {
   if (!message.content.startsWith(prefix)) return;
   if (message.author.bot) return;
 
+  if (message.content.startsWith(prefix + "stickerlist")) {
+    let text =  "";
+    Object.keys(stickers).forEach(function(alias) {
+      text += alias + "\n";
+    });
+    message.channel.sendMessage(text);
+    return;
+  }
+
   let command = message.content.substring(1);
   if (stickers.hasOwnProperty(command)) {
     message
