@@ -9,15 +9,6 @@ bot.on("message", message => {
   if (!message.content.startsWith(prefix)) return;
   if (message.author.bot) return;
 
-  if (message.content.startsWith(prefix + "stickerlist")) {
-    const text =  "";
-    Object.keys(stickers).forEach(function(alias) {
-      text += alias + "\n";
-    });
-    message.channel.sendMessage(text);
-    return;
-  }
-
   const command = message.content.substring(1);
   if (stickers.hasOwnProperty(command)) {
     message
@@ -25,10 +16,21 @@ bot.on("message", message => {
     .then(message => {
       const text = `${message.author} just sent the sticker ${command}`;
       message.channel.sendFile(stickers[command], "", text);
+      return;
     })
     .catch(console.error);
   }
 
+  if (message.content.startsWith(prefix + "stickerlist")) {
+    let text =  "";
+    Object.keys(stickers).forEach(alias => {
+      text += alias + "\n";
+    });
+    message.channel.sendMessage(text);
+  }
+
 });
 
-bot.login(process.env.DISCORD_TOKEN);
+console.log(`running environment in ${process.env.NODE_ENV}...`);
+const TOKEN = process.env.NODE_ENV === "development" ? process.env.DISCORD_TOKEN_DEV : process.env.DISCORD_TOKEN;
+bot.login(TOKEN);
