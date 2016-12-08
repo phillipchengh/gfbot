@@ -9,16 +9,10 @@ bot.on("message", message => {
   if (!message.content.startsWith(prefix)) return;
   if (message.author.bot) return;
 
-  const command = message.content.substring(1);
+  const command = message.content.split(" ")[0].substring(1).toLowerCase();
   if (stickers.hasOwnProperty(command)) {
-    message
-    .delete()
-    .then(message => {
-      const text = `${message.author} just sent the sticker ${command}`;
-      message.channel.sendFile(stickers[command], "", text);
-      return;
-    })
-    .catch(console.error);
+    const text = `${message.author} sent a sticker!`;
+    message.channel.sendFile(stickers[command], "", text);
   }
 
   if (message.content.startsWith(prefix + "stickerlist")) {
