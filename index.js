@@ -13,6 +13,7 @@ bot.on("message", message => {
   if (stickers.hasOwnProperty(command)) {
     const text = `${message.author} sent a sticker!`;
     message.channel.sendFile(stickers[command], "", text);
+    return;
   }
 
   if (message.content.startsWith(prefix + "stickerlist")) {
@@ -21,6 +22,7 @@ bot.on("message", message => {
       text += alias + "\n";
     });
     message.channel.sendMessage(text);
+    return;
   }
 
 });
