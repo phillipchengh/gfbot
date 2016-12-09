@@ -2,6 +2,7 @@ module.exports = () => {
   const app = require("express")();
   const bodyParser = require("body-parser");
   const roll = require("../util/roll");
+  const output = require("../util/output");
   const Promise = require("bluebird");
   Promise.promisifyAll(require("redis"));
   const redis = require("redis").createClient();
@@ -72,6 +73,19 @@ module.exports = () => {
     return JSON.stringify(gacha);
   };
 
+  app.get("/draw/premium/get", (req, res) => {
+    redis.lindexAsync("gachas", 0)
+    .then((data) => {
+      if (data === null) {
+        return res.send("?");
+      }
+      return res.send(data);
+    })
+    .catch((e) => {
+      return res.send("could not get");
+    });
+  });
+
   app.post("/draw/premium/add", (req, res) => {
     redis.lindexAsync("gachas", 0)
     .then((data) => {
@@ -100,10 +114,12 @@ module.exports = () => {
       if (data === null) {
         return res.send("?");
       }
-      const results = roll.single(JSON.parse(data));
+      // const results = roll.single(JSON.parse(data));
+      const results = output.single(JSON.parse(data));
       return res.send(results);
     })
     .catch((e) => {
+      console.log(e);
       return res.send("hmm");
     });
   });
@@ -114,7 +130,9 @@ module.exports = () => {
       if (data === null) {
         return res.send("?");
       }
-      const results = roll.tenPart(JSON.parse(data));
+      // const results = roll.tenPart(JSON.parse(data));
+      const results = output.tenPart(JSON.parse(data));
+      console.log(results);
       return res.send(results);
     })
     .catch((e) => {

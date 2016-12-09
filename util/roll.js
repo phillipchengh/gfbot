@@ -29,7 +29,7 @@ module.exports = (() => {
       const R = gacha.items.R;
       const draws = [];
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 9; i++) {
         let rarity = Math.random() * ratioTotal;
         let draw;
 
@@ -43,6 +43,17 @@ module.exports = (() => {
 
         draws.push(draw);
       }
+
+      // last draw is at least SR
+      let rarity = Math.random() * ratioTotal;
+      let draw;
+
+      if (rarity < ratioSSR) {
+        draw = rarityRoll(SSR);
+      } else {
+        draw = rarityRoll(SR);
+      }
+      draws.push(draw);
 
       return draws;
     },
