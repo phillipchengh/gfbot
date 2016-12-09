@@ -27,6 +27,7 @@ module.exports = (() => {
       const SSR = gacha.items.SSR;
       const SR = gacha.items.SR;
       const R = gacha.items.R;
+      const draws = [];
 
       for (let i = 0; i < 10; i++) {
         let rarity = Math.random() * ratioTotal;
@@ -40,8 +41,25 @@ module.exports = (() => {
           draw = rarityRoll(R);
         }
 
-        console.log(draw);
+        draws.push(draw);
       }
+
+      return draws;
+    },
+
+    single: (gacha) => {
+      let rarity = Math.random() * gacha.ratio.total;
+      let draw;
+
+      if (rarity < gacha.ratio.SSR) {
+        draw = rarityRoll(gacha.items.SSR);
+      } else if (rarity < gacha.ratio.SR) {
+        draw = rarityRoll(gacha.items.SR);
+      } else {
+        draw = rarityRoll(gacha.items.R);
+      }
+
+      return draw;
     }
   };
 })();

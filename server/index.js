@@ -95,6 +95,34 @@ module.exports = () => {
 
   });
 
+  app.get("/draw/single", (req, res) => {
+    redis.lindexAsync("gachas", 0)
+    .then((data) => {
+      if (data === null) {
+        return res.send("?");
+      }
+      const results = roll.single(JSON.parse(data));
+      return res.send(results);
+    })
+    .catch((e) => {
+      return res.send("hmm");
+    });
+  });
+
+  app.get("/draw/ten_part", (req, res) => {
+    redis.lindexAsync("gachas", 0)
+    .then((data) => {
+      if (data === null) {
+        return res.send("?");
+      }
+      const results = roll.tenPart(JSON.parse(data));
+      return res.send(results);
+    })
+    .catch((e) => {
+      return res.send("hmm");
+    });
+  });
+
   app.listen(1337, () => {
     console.log("listening on port 1337...");
   });
