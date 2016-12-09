@@ -92,7 +92,6 @@ module.exports = () => {
     .catch((e) => {
       return res.send("sorry");
     });
-
   });
 
   app.get("/draw/single", (req, res) => {
