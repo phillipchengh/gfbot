@@ -59,5 +59,11 @@ module.exports = (TOKEN) => {
 
   });
 
+  bot.on("disconnect", (msg, code) => {
+    console.log(`bot disconnected with code ${code} for reason ${msg}`);
+    console.log(`bot reconnecting...`);
+    bot.connect();
+  });
+
   bot.login(TOKEN);
 };
