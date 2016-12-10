@@ -109,34 +109,24 @@ module.exports = () => {
   });
 
   app.get("/draw/single", (req, res) => {
-    redis.lindexAsync("gachas", 0)
-    .then((data) => {
-      if (data === null) {
-        return res.send("?");
-      }
-      // const results = roll.single(JSON.parse(data));
-      const results = output.single(JSON.parse(data));
-      return res.send(results);
+    roll.single()
+    .then((draw) => {
+      res.send(draw);
     })
     .catch((e) => {
       console.log(e);
-      return res.send("hmm");
+      res.send("failed to draw single");
     });
   });
 
   app.get("/draw/ten_part", (req, res) => {
-    redis.lindexAsync("gachas", 0)
-    .then((data) => {
-      if (data === null) {
-        return res.send("?");
-      }
-      // const results = roll.tenPart(JSON.parse(data));
-      const results = output.tenPart(JSON.parse(data));
-      console.log(results);
-      return res.send(results);
+    roll.tenPart()
+    .then((draws) => {
+      res.send(draws);
     })
     .catch((e) => {
-      return res.send("hmm");
+      console.log(e);
+      res.send("failed to draw ten part");
     });
   });
 

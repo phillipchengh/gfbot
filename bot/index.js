@@ -7,6 +7,16 @@ module.exports = (TOKEN) => {
   Promise.promisifyAll(require("redis"));
   const redis = require("redis").createClient();
 
+  const rollReply = (message, rollAndOutput) => {
+    rollAndOutput()
+    .then((reply) => {
+      return message.channel.sendMessage(reply);
+    })
+    .catch((e) => {
+      return message.channel.sendMessage("gfbot exploded");
+    });
+  };
+
   bot.on("message", message => {
     const prefix = "!";
 
@@ -21,31 +31,11 @@ module.exports = (TOKEN) => {
     }
 
     if (message.content.startsWith(prefix + "buyinggf")) {
-      redis.lindexAsync("gachas", 0)
-      .then((data) => {
-        if (data === null) {
-          return message.channel.sendMessage("scrub is missing some data...");
-        }
-        const results = output.tenPart(JSON.parse(data));
-        return message.channel.sendMessage(results);
-      })
-      .catch((e) => {
-        return message.channel.sendMessage("gfbot exploded");
-      });
+      return rollReply(message, output.tenPart);
     }
 
     if (message.content.startsWith(prefix + "memeroll")) {
-      redis.lindexAsync("gachas", 0)
-      .then((data) => {
-        if (data === null) {
-          return message.channel.sendMessage("scrub is missing some data...");
-        }
-        const results = output.single(JSON.parse(data));
-        return message.channel.sendMessage(results);
-      })
-      .catch((e) => {
-        return message.channel.sendMessage("gfbot exploded");
-      });
+      return rollReply(message, output.single);
     }
 
     if (message.content.startsWith(prefix + "stickerlist")) {

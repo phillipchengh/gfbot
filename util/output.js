@@ -5,21 +5,30 @@ module.exports = (() => {
     return `[${draw.rarity}][${draw.name}] ${draw.drop_rate}% ${draw.incidence === 1 ? "rate up" : ""}`;
   };
 
+  const formatTenPart = (draws) => {
+    let rows = "";
+    draws.forEach((draw) => {
+      rows += `${formatDraw(draw)}\n`
+    });
+    const output = `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
+    return output;
+  };
+
+  const formatSingle = (draw) => {
+    const row = formatDraw(draw);
+    const output = `\`\`\`Markdown\nSingle Roll\n===========\n\n${row}\`\`\``;
+    return output;
+  };
+
   return {
-    tenPart: (gacha) => {
-      const draws = roll.tenPart(gacha);
-      let rows = "";
-      draws.forEach((draw) => {
-        rows += `${formatDraw(draw)}\n`
-      });
-      let output = `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
-      return output;
+    tenPart: () => {
+      return roll.tenPart()
+      .then(formatTenPart);
     },
 
     single: (gacha) => {
-      const row = formatDraw(roll.single(gacha));
-      let output = `\`\`\`Markdown\nSingle Roll\n===========\n\n${row}\`\`\``;
-      return output;
+      return roll.single()
+      .then(formatSingle);
     }
   };
 
