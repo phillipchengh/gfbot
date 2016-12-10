@@ -1,8 +1,7 @@
 module.exports = () => {
   const app = require("express")();
   const bodyParser = require("body-parser");
-  const roll = require("../util/roll");
-  const output = require("../util/output");
+  const roll = require("../bot/lib/roll");
   const Promise = require("bluebird");
   Promise.promisifyAll(require("redis"));
   const redis = require("redis").createClient();

@@ -2,10 +2,7 @@ module.exports = (TOKEN) => {
   const discord = require("discord.js");
   const bot = new discord.Client();
   const stickers = require("./lib/aliases.js");
-  const output = require("../util/output");
-  const Promise = require("bluebird");
-  Promise.promisifyAll(require("redis"));
-  const redis = require("redis").createClient();
+  const output = require("./lib/output");
 
   const rollReply = (message, rollAndOutput) => {
     rollAndOutput()
