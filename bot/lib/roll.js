@@ -80,7 +80,7 @@ module.exports = (() => {
     return draw;
   };
 
-  const roll = (type) => {
+  const rollAsync = (type) => {
     return redis.lindexAsync("gachas", 0)
     .then((gacha) => {
       return type(JSON.parse(gacha));
@@ -88,12 +88,12 @@ module.exports = (() => {
   };
 
   return {
-    tenPart: () => {
-      return roll(tenPart);
+    tenPartAsync: () => {
+      return rollAsync(tenPart);
     },
 
-    single: () => {
-      return roll(single);
+    singleAsync: () => {
+      return rollAsync(single);
     }
   };
 })();

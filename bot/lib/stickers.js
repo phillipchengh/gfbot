@@ -4,7 +4,7 @@ module.exports = (() => {
   const redis = require("redis").createClient();
 
   return {
-    get: (command) => {
+    getAsync: (command) => {
       return redis.hgetAsync("stickers", command);
     }
   };

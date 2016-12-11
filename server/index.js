@@ -108,7 +108,7 @@ module.exports = () => {
   });
 
   app.get("/draw/single", (req, res) => {
-    roll.single()
+    roll.singleAsync()
     .then((draw) => {
       res.send(draw);
     })
@@ -119,7 +119,7 @@ module.exports = () => {
   });
 
   app.get("/draw/ten_part", (req, res) => {
-    roll.tenPart()
+    roll.tenPartAsync()
     .then((draws) => {
       res.send(draws);
     })

@@ -1,6 +1,5 @@
 module.exports = (() => {
   const roll = require("./roll");
-  const stickers = require("./stickers");
 
   const formatDraw = (draw) => {
     return `[${draw.rarity}][${draw.name}] ${draw.drop_rate}% ${draw.incidence === 1 ? "rate up" : ""}`;
@@ -11,33 +10,31 @@ module.exports = (() => {
     draws.forEach((draw) => {
       rows += `${formatDraw(draw)}\n`
     });
-    const output = `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
-    return output;
+    return `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
   };
 
   const formatSingle = (draw) => {
     const row = formatDraw(draw);
-    const output = `\`\`\`Markdown\nSingle Roll\n===========\n\n${row}\`\`\``;
-    return output;
+    return `\`\`\`Markdown\nSingle Roll\n===========\n\n${row}\`\`\``;
   };
 
-  const formatSticker = (command) => {
-
-  };
+  const formatStickerMessage = (message) => {
+    return `${message.author} sent a sticker!`;
+  }
 
   return {
-    tenPart: () => {
-      return roll.tenPart()
+    tenPartAsync: () => {
+      return roll.tenPartAsync()
       .then(formatTenPart);
     },
 
-    single: () => {
-      return roll.single()
+    singleAsync: () => {
+      return roll.singleAsync()
       .then(formatSingle);
     },
 
-    sticker: (command) => {
-      return sticker.hget()
+    stickerMessage: (message) => {
+      return formatStickerMessage(message);
     }
   };
 
