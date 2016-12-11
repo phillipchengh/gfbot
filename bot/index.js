@@ -4,6 +4,7 @@ module.exports = (TOKEN) => {
   const stickers = require("./lib/stickers");
   const {tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
   const {prefix} = require("./config");
+  const log = require("./lib/log");
 
   const replyRoll = (message, rollAndOutput) => {
     rollAndOutput()
@@ -11,7 +12,7 @@ module.exports = (TOKEN) => {
       return message.channel.sendMessage(reply);
     })
     .catch((e) => {
-      console.error(e);
+      log.error(e, {message: message});
       return message.channel.sendMessage("gfbot exploded :thinking:");
     });
   };
@@ -24,7 +25,7 @@ module.exports = (TOKEN) => {
       return message.channel.sendFile(url, "", stickerMessage(message));
     })
     .catch((e) => {
-      console.error(e);
+      log.error(e, {message: message});
       return message.channel.sendMessage("gfbot exploded :thinking:");
     });
   };
@@ -45,9 +46,8 @@ module.exports = (TOKEN) => {
   });
 
   bot.on("disconnect", (msg, code) => {
-    console.log(`bot disconnected with code ${code} for reason ${msg}`);
-    console.log(`bot reconnecting...`);
-    bot.connect();
+    log.disconnect({msg: msg, code: code});
+    bot.login(TOKEN);
   });
 
   bot.login(TOKEN);
