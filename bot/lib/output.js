@@ -1,14 +1,31 @@
 module.exports = (() => {
   const roll = require("./roll");
 
-  const formatDraw = (draw) => {
-    return `[${draw.rarity}][${draw.name}] ${draw.drop_rate}% ${draw.incidence === 1 ? "rate up" : ""}`;
+  const formatDraw = (draw, rarestLength) => {
+    let spaces = "";
+    let spaceLength = rarestLength - draw.rarity.length;
+    switch (spaceLength) {
+      case 2:
+        spaces = "  ";
+        break;
+      case 1:
+        spaces = " ";
+        break;
+      default:
+        spaces = "";
+    }
+    return `[${spaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}] ${draw.drop_rate}% ${draw.incidence === 1 ? "rate up" : ""}`;
   };
 
   const formatTenPart = (draws) => {
     let rows = "";
+    let rarestLength = 0;
+    // first get rarest draw, then format spaces accordingly
     draws.forEach((draw) => {
-      rows += `${formatDraw(draw)}\n`
+      rarestLength = (draw.rarity.length > rarestLength) ? draw.rarity.length : rarestLength;
+    });
+    draws.forEach((draw) => {
+      rows += `${formatDraw(draw, rarestLength)}\n`
     });
     return `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
   };
