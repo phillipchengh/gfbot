@@ -11,7 +11,8 @@ module.exports = (TOKEN) => {
       return message.channel.sendMessage(reply);
     })
     .catch((e) => {
-      return message.channel.sendMessage("gfbot exploded");
+      console.error(e);
+      return message.channel.sendMessage("gfbot exploded :thinking:");
     });
   };
 
@@ -23,7 +24,8 @@ module.exports = (TOKEN) => {
       return message.channel.sendFile(url, "", stickerMessage(message));
     })
     .catch((e) => {
-      return message.channel.sendMessage("gfbot exploded");
+      console.error(e);
+      return message.channel.sendMessage("gfbot exploded :thinking:");
     });
   };
 

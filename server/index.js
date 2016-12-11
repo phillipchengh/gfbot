@@ -81,7 +81,7 @@ module.exports = () => {
       return res.send(data);
     })
     .catch((e) => {
-      return res.send("could not get");
+      return res.send("failed to get gacha");
     });
   });
 
@@ -103,7 +103,7 @@ module.exports = () => {
       }
     })
     .catch((e) => {
-      return res.send("sorry");
+      return res.send("failed to add gacha");
     });
   });
 
@@ -113,7 +113,7 @@ module.exports = () => {
       res.send(draw);
     })
     .catch((e) => {
-      console.log(e);
+      console.error(e);
       res.send("failed to draw single");
     });
   });
@@ -124,7 +124,7 @@ module.exports = () => {
       res.send(draws);
     })
     .catch((e) => {
-      console.log(e);
+      console.error(e);
       res.send("failed to draw ten part");
     });
   });
