@@ -1,4 +1,4 @@
-const BASE = require('./constants.js').BASE_URL;
+const BASE = require('../config.js').STICKER_BASE;
 
 module.exports = {
   "heregoes": `${BASE}stamp1.png`,

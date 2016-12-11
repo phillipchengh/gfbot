@@ -1,8 +1,9 @@
 module.exports = (TOKEN) => {
   const discord = require("discord.js");
   const bot = new discord.Client();
-  const stickers = require("./lib/aliases.js");
+  const stickers = require("./lib/stickers");
   const output = require("./lib/output");
+  const {prefix} = require("./config");
 
   const rollReply = (message, rollAndOutput) => {
     rollAndOutput()
@@ -15,17 +16,8 @@ module.exports = (TOKEN) => {
   };
 
   bot.on("message", message => {
-    const prefix = "!";
-
     if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
-
-    const command = message.content.split(" ")[0].substring(1).toLowerCase();
-    if (stickers.hasOwnProperty(command)) {
-      const text = `${message.author} sent a sticker!`;
-      message.channel.sendFile(stickers[command], "", text);
-      return;
-    }
 
     if (message.content.startsWith(prefix + "buyinggf")) {
       return rollReply(message, output.tenPart);
@@ -44,6 +36,15 @@ module.exports = (TOKEN) => {
       return;
     }
 
+    const command = message.content.split(" ")[0].substring(1).toLowerCase();
+    stickers.get(command)
+    .then((url) => {
+      if (url === null) return;
+      return message.channel.sendFile(url, "", `${message.author} sent a sticker!`);
+    })
+    .catch((e) => {
+      return message.channel.sendMessage("gfbot exploded");
+    });
   });
 
   bot.on("disconnect", (msg, code) => {
