@@ -11,6 +11,7 @@ module.exports = (() => {
       result.items.push({
         "name": item.name,
         "drop_rate": rate,
+        "cum_rate": +total_rate.toFixed(3),
         "attribute": (item.attribute === null) ? null : parseInt(item.attribute),
         "kind": (item.kind === null) ? null : parseInt(item.kind),
         "incidence": (item.incidence === null) ? null : parseInt(item.incidence),

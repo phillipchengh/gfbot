@@ -3,18 +3,26 @@ module.exports = (() => {
   Promise.promisifyAll(require("redis"));
   const redis = require("redis").createClient();
 
-  const get = (gacha, index) => {
-    let sum = 0;
-    if (gacha.length === 0) return null;
-    let cur = gacha[0];
-    for (let i = 1; i < gacha.length; i++) {
-      sum += cur.drop_rate;
-      if (index < sum) {
-        break;
-      }
-      cur = gacha[i];
+  const rget = (gacha, index, start, end) => {
+    const mid = Math.floor((start + end) / 2);
+    if (gacha[mid].cum_rate <= index && gacha[mid+1].cum_rate >= index) {
+      return gacha[mid];
     }
-    return cur;
+    // index is less than current draw and next draw, search right
+    if (gacha[mid].cum_rate <= index) {
+      return rget(gacha, index, mid+1, end);
+    } else {
+    // index is greater than current draw, search left
+      return rget(gacha, index, start, mid-1);
+    }
+  };
+
+  const get = (gacha, index) => {
+    // edge cases: check first and last item, to make recursive algorithm easier
+    if (gacha[0].cum_rate >= index) return gacha[0];
+    const end = gacha.length-1;
+    if (gacha[end].cum_rate <= index) return gacha[end];
+    return rget(gacha, index, 0, end-1);
   };
 
   const rarityRoll = (list) => {
