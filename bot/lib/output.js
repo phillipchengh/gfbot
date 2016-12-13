@@ -13,14 +13,14 @@ module.exports = (() => {
     return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}% ${draw.incidence === 1 ? "(rate up)" : ""}`;
   };
 
-  const formatTenPart = (draws) => {
+  const formatTenPart = (draws, message) => {
     let rows = "";
     const longest = {
       rarity: 0,
       name: 0,
       drop_rate: 0
     };
-    // first get rarest draw, then format spaces accordingly
+    // format spaces
     draws.forEach((draw) => {
       longest.rarity = (draw.rarity.length > longest.rarity) ? draw.rarity.length : longest.rarity;
       longest.name = (draw.name.length > longest.name) ? draw.name.length : longest.name;
@@ -30,27 +30,35 @@ module.exports = (() => {
     draws.forEach((draw) => {
       rows += `${formatDraw(draw, longest)}\n`
     });
-    return `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
+    const name = message.member.nickname;
+    const equals = "=".repeat(name.length);
+    return `\`\`\`Markdown\n${name}'s Ten Roll\n${equals}===========\n\n${rows}\`\`\``;
   };
 
-  const formatSingle = (draw) => {
+  const formatSingle = (draw, message) => {
     const row = formatDraw(draw);
-    return `\`\`\`Markdown\nSingle Roll\n===========\n\n${row}\`\`\``;
+    const name = message.member.nickname;
+    const equals = "=".repeat(name.length);
+    return `\`\`\`Markdown\n${name}'s Single Roll\n${equals}==============\n\n${row}\`\`\``;
   };
 
   const formatStickerMessage = (message) => {
     return `${message.author} sent a sticker!`;
-  }
+  };
 
   return {
-    tenPartAsync: () => {
+    tenPartAsync: (message) => {
       return roll.tenPartAsync()
-      .then(formatTenPart);
+      .then((draws) => {
+        return formatTenPart(draws, message);
+      });
     },
 
-    singleAsync: () => {
+    singleAsync: (message) => {
       return roll.singleAsync()
-      .then(formatSingle);
+      .then((draw) => {
+        return formatSingle(draw, message);
+      });
     },
 
     stickerMessage: (message) => {

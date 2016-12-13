@@ -7,7 +7,7 @@ module.exports = (TOKEN) => {
   const log = require("./lib/log");
 
   const replyRoll = (message, rollAndOutput) => {
-    rollAndOutput()
+    rollAndOutput(message)
     .then((reply) => {
       return message.channel.sendMessage(reply);
     })
