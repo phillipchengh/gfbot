@@ -7,7 +7,6 @@ module.exports = (() => {
     if (longest) {
       const raritySpacesLength = longest.rarity - draw.rarity.length;
       raritySpaces = " ".repeat(raritySpacesLength);
-      // const nameSpacesLength = longest.name - draw.name.length + longest.drop_rate - draw.drop_rate.toString().length;
       const nameSpacesLength = longest.name - draw.name.length;
       nameSpaces = " ".repeat(nameSpacesLength);
     }
