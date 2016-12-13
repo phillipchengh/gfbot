@@ -5,6 +5,7 @@ module.exports = (TOKEN) => {
   const {tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
   const {prefix} = require("./config");
   const log = require("./lib/log");
+  const cloudinary = require("cloudinary");
 
   const replyRoll = (message, rollAndOutput) => {
     rollAndOutput(message)
@@ -40,6 +41,10 @@ module.exports = (TOKEN) => {
 
     if (message.content.startsWith(`${prefix}memeroll`)) {
       return replyRoll(message, singleAsync);
+    }
+
+    if (message.content.startsWith(`${prefix}stickers`)) {
+      return message.channel.sendFile(cloudinary.url("stickers.jpg"));
     }
 
     return replyIfSticker(message);
