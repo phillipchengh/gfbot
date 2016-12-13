@@ -1,31 +1,35 @@
 module.exports = (() => {
   const roll = require("./roll");
 
-  const formatDraw = (draw, rarestLength) => {
-    let spaces = "";
-    let spaceLength = rarestLength - draw.rarity.length;
-    switch (spaceLength) {
-      case 2:
-        spaces = "  ";
-        break;
-      case 1:
-        spaces = " ";
-        break;
-      default:
-        spaces = "";
+  const formatDraw = (draw, longest) => {
+    let raritySpaces = "";
+    let nameSpaces = "";
+    if (longest) {
+      const raritySpacesLength = longest.rarity - draw.rarity.length;
+      raritySpaces = " ".repeat(raritySpacesLength);
+      // const nameSpacesLength = longest.name - draw.name.length + longest.drop_rate - draw.drop_rate.toString().length;
+      const nameSpacesLength = longest.name - draw.name.length;
+      nameSpaces = " ".repeat(nameSpacesLength);
     }
-    return `[${spaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}] ${draw.drop_rate}% ${draw.incidence === 1 ? "rate up" : ""}`;
+    return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}% ${draw.incidence === 1 ? "(rate up)" : ""}`;
   };
 
   const formatTenPart = (draws) => {
     let rows = "";
-    let rarestLength = 0;
+    const longest = {
+      rarity: 0,
+      name: 0,
+      drop_rate: 0
+    };
     // first get rarest draw, then format spaces accordingly
     draws.forEach((draw) => {
-      rarestLength = (draw.rarity.length > rarestLength) ? draw.rarity.length : rarestLength;
+      longest.rarity = (draw.rarity.length > longest.rarity) ? draw.rarity.length : longest.rarity;
+      longest.name = (draw.name.length > longest.name) ? draw.name.length : longest.name;
+      let dropRateLen = draw.drop_rate.toString().length; 
+      longest.drop_rate = (dropRateLen > longest.drop_rate) ? dropRateLen : longest.drop_rate;
     });
     draws.forEach((draw) => {
-      rows += `${formatDraw(draw, rarestLength)}\n`
+      rows += `${formatDraw(draw, longest)}\n`
     });
     return `\`\`\`Markdown\nTen Roll\n========\n\n${rows}\`\`\``;
   };
