@@ -47,6 +47,11 @@ module.exports = (TOKEN) => {
       return message.channel.sendFile(cloudinary.url("stickers.jpg"));
     }
 
+    if (message.content.startsWith(`${prefix}roll`)) {
+      const number = Math.floor(Math.random() * 100) + 1;
+      return message.channel.sendMessage(`${message.author} rolled a ${number}`);
+    }
+    
     return replyIfSticker(message);
   });
 
