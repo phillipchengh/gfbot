@@ -68,7 +68,7 @@ module.exports = (() => {
     }
     draws.push(draw);
 
-    return draws;
+    return {created: gacha.meta.created, draws: draws};
   };
 
   const single = (gacha) => {
@@ -85,7 +85,7 @@ module.exports = (() => {
       draw = rarityRoll(gacha.items.R);
     }
 
-    return draw;
+    return {created: gacha.meta.created, draw: draw};
   };
 
   const rollAsync = (type) => {

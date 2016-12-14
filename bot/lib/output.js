@@ -1,5 +1,6 @@
 module.exports = (() => {
   const roll = require("./roll");
+  const moment = require("moment");
 
   const formatDraw = (draw, longest) => {
     let raritySpaces = "";
@@ -13,7 +14,12 @@ module.exports = (() => {
     return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}% ${draw.incidence === 1 ? "(rate up)" : ""}`;
   };
 
-  const formatTenPart = (draws, message) => {
+  const ago = (created) => {
+    return moment().subtract(moment().diff(created)).fromNow();
+  };
+
+  const formatTenPart = (output, message) => {
+    const draws = output.draws;
     let rows = "";
     const longest = {
       rarity: 0,
@@ -32,14 +38,15 @@ module.exports = (() => {
     });
     const name = message.member.nickname;
     const equals = "=".repeat(name.length);
-    return `\`\`\`Markdown\n${name}'s Ten Roll\n${equals}===========\n\n${rows}\`\`\``;
+    return `\`\`\`Markdown\n${name}'s Ten Roll\n${equals}===========\nGacha last updated ${ago(output.created)}\n\n${rows}\`\`\``;
   };
 
-  const formatSingle = (draw, message) => {
+  const formatSingle = (output, message) => {
+    const draw = output.draw;
     const row = formatDraw(draw);
     const name = message.member.nickname;
     const equals = "=".repeat(name.length);
-    return `\`\`\`Markdown\n${name}'s Single Roll\n${equals}==============\n\n${row}\`\`\``;
+    return `\`\`\`Markdown\n${name}'s Single Roll\n${equals}==============\nGacha last updated ${ago(output.created)}\n\n${row}\`\`\``;
   };
 
   const formatStickerMessage = (message) => {
@@ -49,15 +56,15 @@ module.exports = (() => {
   return {
     tenPartAsync: (message) => {
       return roll.tenPartAsync()
-      .then((draws) => {
-        return formatTenPart(draws, message);
+      .then((output) => {
+        return formatTenPart(output, message);
       });
     },
 
     singleAsync: (message) => {
       return roll.singleAsync()
-      .then((draw) => {
-        return formatSingle(draw, message);
+      .then((output) => {
+        return formatSingle(output, message);
       });
     },
 
