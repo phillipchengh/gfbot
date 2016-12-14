@@ -36,7 +36,7 @@ module.exports = (() => {
     draws.forEach((draw) => {
       rows += `${formatDraw(draw, longest)}\n`
     });
-    const name = message.member.nickname;
+    const name = message.member.nickname ? message.member.nickname : message.author.username;
     const equals = "=".repeat(name.length);
     return `\`\`\`Markdown\n${name}'s Ten Roll\n${equals}===========\nGacha last updated ${ago(output.created)}\n\n${rows}\`\`\``;
   };
@@ -44,7 +44,7 @@ module.exports = (() => {
   const formatSingle = (output, message) => {
     const draw = output.draw;
     const row = formatDraw(draw);
-    const name = message.member.nickname;
+    const name = message.member.nickname ? message.member.nickname : message.author.username;
     const equals = "=".repeat(name.length);
     return `\`\`\`Markdown\n${name}'s Single Roll\n${equals}==============\nGacha last updated ${ago(output.created)}\n\n${row}\`\`\``;
   };
