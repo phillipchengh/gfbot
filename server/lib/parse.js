@@ -9,7 +9,7 @@ module.exports = (() => {
       let rate = +parseFloat(item.drop_rate).toFixed(3);
       total_rate += rate;
       result.items.push({
-        "name": item.name,
+        "name": item.name.trim(),
         "drop_rate": rate,
         "cum_rate": +total_rate.toFixed(3),
         "attribute": (item.attribute === null) ? null : parseInt(item.attribute),
