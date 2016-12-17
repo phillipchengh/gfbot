@@ -6,7 +6,7 @@ module.exports = (() => {
   const rget = (gacha, index, start, end) => {
     const mid = Math.floor((start + end) / 2);
     if (gacha[mid].cum_rate <= index && gacha[mid+1].cum_rate >= index) {
-      return gacha[mid];
+      return gacha[mid+1];
     }
     // index is less than current draw and next draw, search right
     if (gacha[mid].cum_rate <= index) {
