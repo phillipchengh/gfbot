@@ -57,6 +57,7 @@ module.exports = (TOKEN) => {
 
   bot.on("disconnect", (msg, code) => {
     log.disconnect({msg: msg, code: code});
+    process.exit();
   });
 
   bot.login(TOKEN);
