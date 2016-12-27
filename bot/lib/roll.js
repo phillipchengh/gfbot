@@ -30,6 +30,40 @@ module.exports = (() => {
     return (index < list.weapons.total_rate) ? get(list.weapons.items, index) : get(list.summons.items, index - list.weapons.total_rate);
   };
 
+  const starLegend = (gacha) => {
+    if (gacha === null) throw new Error("ten part roll: could not get gacha");
+
+    const ratioTotal = gacha.ratio.total;
+    const ratioSSR = gacha.ratio.SSR;
+    const ratioSR = gacha.ratio.SR;
+    const ratioR = gacha.ratio.R;
+    const SSR = gacha.items.SSR;
+    const SR = gacha.items.SR;
+    const R = gacha.items.R;
+    const draws = [];
+
+    for (let i = 0; i < 9; i++) {
+      let rarity = Math.random() * ratioTotal;
+      let draw;
+
+      if (rarity < ratioSSR) {
+        draw = rarityRoll(SSR);
+      } else if (rarity < ratioSR) {
+        draw = rarityRoll(SR); 
+      } else {
+        draw = rarityRoll(R);
+      }
+
+      draws.push(draw);
+    }
+
+    // last draw is at least SSR
+    draw = rarityRoll(SSR);
+    draws.push(draw);
+
+    return {created: gacha.meta.created, draws: draws};
+  };
+
   const tenPart = (gacha) => {
     if (gacha === null) throw new Error("ten part roll: could not get gacha");
 
@@ -96,6 +130,10 @@ module.exports = (() => {
   };
 
   return {
+    starLegendAsync: () => {
+      return rollAsync(starLegend);
+    },
+
     tenPartAsync: () => {
       return rollAsync(tenPart);
     },

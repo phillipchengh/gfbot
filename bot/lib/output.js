@@ -11,11 +11,37 @@ module.exports = (() => {
       const nameSpacesLength = longest.name - draw.name.length;
       nameSpaces = " ".repeat(nameSpacesLength);
     }
-    return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}% ${draw.incidence === 1 ? "(rate up)" : ""}`;
+    return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}%${draw.incidence === 1 ? " (rate up)" : ""}`;
   };
 
   const ago = (created) => {
     return moment().subtract(moment().diff(created)).fromNow();
+  };
+
+  const formatStarLegend = (output, message) => {
+    const draws = output.draws;
+    let rows = "";
+    const longest = {
+      rarity: 0,
+      name: 0,
+      drop_rate: 0
+    };
+    // format spaces
+    draws.forEach((draw) => {
+      longest.rarity = (draw.rarity.length > longest.rarity) ? draw.rarity.length : longest.rarity;
+      longest.name = (draw.name.length > longest.name) ? draw.name.length : longest.name;
+      let dropRateLen = draw.drop_rate.toString().length; 
+      longest.drop_rate = (dropRateLen > longest.drop_rate) ? dropRateLen : longest.drop_rate;
+    });
+    draws.forEach((draw, index) => {
+      if (index < 9) {
+        rows += `${formatDraw(draw, longest)}\n`;
+      }
+    });
+    rows += `${formatDraw(draws[9], longest)} (scam)`;
+    const name = message.member.nickname ? message.member.nickname : message.author.username;
+    const equals = "=".repeat(name.length);
+    return `\`\`\`Markdown\n${name}'s Star Legend\n${equals}===========\nGacha last updated ${ago(output.created)}\n\n${rows}\`\`\``;
   };
 
   const formatTenPart = (output, message) => {
@@ -54,6 +80,13 @@ module.exports = (() => {
   };
 
   return {
+    starLegendAsync: (message) => {
+      return roll.starLegendAsync()
+      .then((output) => {
+        return formatStarLegend(output, message);
+      });
+    },
+
     tenPartAsync: (message) => {
       return roll.tenPartAsync()
       .then((output) => {
