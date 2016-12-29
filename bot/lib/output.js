@@ -49,13 +49,13 @@ module.exports = (() => {
     let rows = "";
     const longest = {
       rarity: 0,
-      name: 0,
+      display_name: 0,
       drop_rate: 0
     };
     // format spaces
     draws.forEach((draw) => {
       longest.rarity = (draw.rarity.length > longest.rarity) ? draw.rarity.length : longest.rarity;
-      longest.name = (draw.name.length > longest.name) ? draw.name.length : longest.name;
+      longest.display_name = (draw.display_name.length > longest.display_name) ? draw.display_name.length : longest.display_name;
       let dropRateLen = draw.drop_rate.toString().length; 
       longest.drop_rate = (dropRateLen > longest.drop_rate) ? dropRateLen : longest.drop_rate;
     });
