@@ -24,7 +24,26 @@ module.exports = (() => {
     return result;
   };
 
-  const parseGacha = (body) => {
+  const updateWeaponsDisplay = (weapons, characters) => {
+    weapons.forEach((weapon) => {
+      if (characters.hasOwnProperty(weapon.name)) {
+        weapon.display_type = "Char";
+        weapon.display_name = characters[weapon.name];
+      } else {
+        weapon.display_type = "Weap";
+        weapon.display_name = weapon.name;
+      }
+    });
+  };
+
+  const updateSummonsDisplay = (summons) => {
+    summons.forEach((summon) => {
+      summon.display_type = "Summ";
+      summon.display_name = summon.name;
+    });
+  };
+
+  const parseGacha = (body, characters) => {
     const gacha = {};
 
     gacha.meta = {
@@ -62,12 +81,70 @@ module.exports = (() => {
     gacha.items.SR.total_rate = +(gacha.items.SR.weapons.total_rate + gacha.items.SR.summons.total_rate).toFixed(3);
     gacha.items.R.total_rate = +(gacha.items.R.weapons.total_rate + gacha.items.R.summons.total_rate).toFixed(3);
 
+    updateGacha(gacha, characters);
+
     return JSON.stringify(gacha);
   };
 
+  const parseCharacters = (body) => {
+    const characters = [];
+
+    if (Array.isArray(body.list)) {
+      body.list.forEach((character) => {
+      // if no chara_name, not a character (from spark list)
+      if (character.hasOwnProperty("chara_name")) {
+        characters.push({
+          weapon: character.name.trim(),
+          name: character.chara_name.trim()
+        });
+      }
+    });
+    } else {
+      // why like this?
+      const list = body.list;
+      for (let number in list) {
+        let character = list[number];
+        if (character.hasOwnProperty("chara_name")) {
+          characters.push({
+            weapon: character.name.trim(),
+            name: character.chara_name.trim()
+          });
+        }
+      }
+    }
+
+    return characters;
+  };
+
+  const updateGacha = (gacha, characters) => {
+    SSRWeapons = gacha.items.SSR.weapons.items;
+    SRWeapons = gacha.items.SR.weapons.items; 
+    RWeapons = gacha.items.R.weapons.items; 
+    
+    SSRSummons = gacha.items.SSR.summons.items; 
+    SRSummons = gacha.items.SR.summons.items;
+    RSummons = gacha.items.R.summons.items; 
+
+    updateWeaponsDisplay(SSRWeapons, characters);
+    updateWeaponsDisplay(SRWeapons, characters);
+    updateWeaponsDisplay(RWeapons, characters);
+
+    updateSummonsDisplay(SSRSummons);
+    updateSummonsDisplay(SRSummons);
+    updateSummonsDisplay(RSummons);
+  };
+
   return {
-    gacha: (body) => {
-      return parseGacha(body);
+    gacha: (body, characters) => {
+      return parseGacha(body, characters);
+    },
+
+    characters: (body) => {
+      return parseCharacters(body); 
+    },
+
+    updateGacha: (gacha, characters) => {
+      updateGacha(gacha, characters);
     }
   };
 

@@ -22,7 +22,12 @@ module.exports = () => {
   });
 
   app.post("/draw/premium/add", (req, res) => {
-    redis.lindexAsync("gachas", 0)
+    let characters;
+    redis.hgetallAsync("characters")
+    .then((data) => {
+      characters = data;
+      return redis.lindexAsync("gachas", 0);
+    })
     .then((data) => {
       if (data !== null) {
         const gacha = JSON.parse(data);
@@ -30,16 +35,90 @@ module.exports = () => {
         if (gacha.meta.current_page_gacha_id === req.body.current_page_gacha_id) {
           return res.send("seems to be the same");
         } else {
-          redis.lpush("gachas", parse.gacha(req.body)); 
+          redis.lpush("gachas", parse.gacha(req.body, characters)); 
           return res.send("appended new gacha")
         }
       } else {
-        redis.lpush("gachas", parse.gacha(req.body));
+        redis.lpush("gachas", parse.gacha(req.body, characters));
         return res.send("newly added");
       }
     })
     .catch((e) => {
+      console.log(e);
       return res.send("failed to add gacha");
+    });
+  });
+
+  // mostly for testing but a bunch of this is so lmao
+  app.post("/draw/premium/update", (req, res) => {
+    let gacha;
+    redis.lindexAsync("gachas", 0)
+    .then((data) => {
+      if (data === null) throw new Error("could not get gacha");
+      gacha = JSON.parse(data);
+      gacha = data;
+      return redis.hgetallAsync("characters");
+    })
+    .then((data) => {
+      if (data === null) throw new Error("could not get characters");
+      characters = data;
+      parse.updateGacha(gacha, characters);
+      return redis.lsetAsync("gachas", 0, JSON.stringify(gacha));
+    })
+    .then((data) => {
+      res.send(gacha);
+    })
+    .catch((e) => {
+      console.log(e);
+      return res.send("failed to add gacha");
+    });
+  });
+
+  app.get("/characters/get", (req, res) => {
+    redis.hgetallAsync("characters")
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((e) => {
+      res.send(e);
+    });
+  });
+
+  app.post("/characters/import", (req, res) => {
+    const characters = req.body;
+    const hsets = []; 
+    for (weapon in characters) {
+      hsets.push(redis.hsetAsync("characters", weapon, characters[weapon]));
+    }
+    Promise.all(hsets)
+    .then(() => {
+      return redis.hgetallAsync("characters");
+    })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((e) => {
+      res.send("eh");
+    });
+  });
+
+  app.post("/characters/add", (req, res) => {
+    const characters = parse.characters(req.body);
+    const hsets = []; 
+    characters.forEach((character) => {
+      let weapon = character.weapon;
+      let name = character.name;  
+      hsets.push(redis.hsetAsync("characters", weapon, name));
+    });
+    Promise.all(hsets)
+    .then(() => {
+      return redis.hgetallAsync("characters");
+    })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((e) => {
+      res.send("huh");
     });
   });
 

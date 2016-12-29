@@ -8,10 +8,10 @@ module.exports = (() => {
     if (longest) {
       const raritySpacesLength = longest.rarity - draw.rarity.length;
       raritySpaces = " ".repeat(raritySpacesLength);
-      const nameSpacesLength = longest.name - draw.name.length;
+      const nameSpacesLength = longest.display_name - draw.display_name.length;
       nameSpaces = " ".repeat(nameSpacesLength);
     }
-    return `[${raritySpaces}${draw.rarity} ${draw.kind === null ? "Summ" : "Weap"}][${draw.name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}%${draw.incidence === 1 ? " (rate up)" : ""}`;
+    return `[${raritySpaces}${draw.rarity} ${draw.display_type}][${draw.display_name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}%${draw.incidence === 1 ? " (rate up)" : ""}`;
   };
 
   const ago = (created) => {
@@ -23,13 +23,13 @@ module.exports = (() => {
     let rows = "";
     const longest = {
       rarity: 0,
-      name: 0,
+      display_name: 0,
       drop_rate: 0
     };
     // format spaces
     draws.forEach((draw) => {
       longest.rarity = (draw.rarity.length > longest.rarity) ? draw.rarity.length : longest.rarity;
-      longest.name = (draw.name.length > longest.name) ? draw.name.length : longest.name;
+      longest.display_name = (draw.display_name.length > longest.display_name) ? draw.display_name.length : longest.display_name;
       let dropRateLen = draw.drop_rate.toString().length; 
       longest.drop_rate = (dropRateLen > longest.drop_rate) ? dropRateLen : longest.drop_rate;
     });
