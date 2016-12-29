@@ -18,6 +18,38 @@ module.exports = (() => {
     return moment().subtract(moment().diff(created)).fromNow();
   };
 
+  const formatSparkDraw = (draw, longest) => {
+    let raritySpaces = "";
+    let nameSpaces = "";
+    const nameSpacesLength = longest.display_name - draw.display_name.length;
+    nameSpaces = " ".repeat(nameSpacesLength);
+    return `[SSR ${draw.display_type}][${draw.display_name}]${nameSpaces} ${draw.drop_rate.toFixed(3)}%${draw.incidence === 1 ? " (rate up)" : ""}`;
+  };
+
+  const formatSpark = (output, message) => {
+    let rows = "";
+    const longest = {
+      display_name: 0,
+      drop_rate: 0
+    };
+    let key;
+    let draw;
+    for (key in output.draws) {
+      draw = output.draws[key];
+      if (draw.count > 1) {
+        draw.display_name = `${draw.display_name}][x${draw.count}`;
+      }
+      longest.display_name = (draw.display_name.length > longest.display_name) ? draw.display_name.length : longest.display_name;
+    }
+    for (key in output.draws) {
+      draw = output.draws[key];
+      rows += `${formatSparkDraw(draw, longest)}\n`
+    }
+    const name = message.member.nickname ? message.member.nickname : message.author.username;
+    const equals = "=".repeat(name.length);
+    return `\`\`\`Markdown\n${name}'s Spark\n${equals}========\nGacha last updated ${ago(output.created)}\n\n${rows}\n${output.SSR} SSRs | ${output.SR} SRs | ${output.R} Rs\`\`\``;
+  };
+
   const formatStarLegend = (output, message) => {
     const draws = output.draws;
     let rows = "";
@@ -80,6 +112,13 @@ module.exports = (() => {
   };
 
   return {
+    sparkAsync: (message) => {
+      return roll.sparkAsync()
+      .then((output) => {
+        return formatSpark(output, message);
+      });
+    },
+
     starLegendAsync: (message) => {
       return roll.starLegendAsync()
       .then((output) => {

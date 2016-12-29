@@ -30,6 +30,70 @@ module.exports = (() => {
     return (index < list.weapons.total_rate) ? get(list.weapons.items, index) : get(list.summons.items, index - list.weapons.total_rate);
   };
 
+  const spark = (gacha) => {
+    if (gacha === null) throw new Error("ten part roll: could not get gacha");
+    
+    const ratioTotal = gacha.ratio.total;
+    const ratioSSR = gacha.ratio.SSR;
+    const ratioSR = gacha.ratio.SR;
+    const SSR = gacha.items.SSR;
+
+    const results = {
+      draws: {},
+      SSR: 0,
+      SR: 0,
+      R: 0
+    };
+
+    const draws = results.draws;
+
+    let rarity;
+    let draw;
+    let i;
+    // imagine 30 10 rolls
+    // 9*30 = 270 regular rolls
+    // 1*30 = 30 are at least SR
+    for (i = 0; i < 270; i++) {
+      rarity = Math.random() * ratioTotal;
+      draw;
+
+      if (rarity < ratioSSR) {
+        draw = rarityRoll(SSR);
+        if (draws.hasOwnProperty(draw.name)) {
+          draws[draw.name].count++;
+        } else {
+          draw.count = 1;
+          draws[draw.name] = draw;
+        }
+        results.SSR++;
+      } else if (rarity < ratioSR) {
+        results.SR++;
+      } else {
+        results.R++;
+      }
+    }
+
+    for (i = 0; i < 30; i++) {
+      rarity = Math.random() * ratioTotal;
+      draw;
+
+      if (rarity < ratioSSR) {
+        draw = rarityRoll(SSR);
+        if (draws.hasOwnProperty(draw.display_name)) {
+          draws[draw.display_name].count++;
+        } else {
+          draw.count = 1;
+          draws[draw.display_name] = draw;
+        }
+        results.SSR++;
+      } else {
+        results.SR++;
+      }
+    }
+
+    return results;
+  };
+
   const starLegend = (gacha) => {
     if (gacha === null) throw new Error("ten part roll: could not get gacha");
 
@@ -130,6 +194,10 @@ module.exports = (() => {
   };
 
   return {
+    sparkAsync: () => {
+      return rollAsync(spark);
+    },
+
     starLegendAsync: () => {
       return rollAsync(starLegend);
     },

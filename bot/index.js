@@ -2,7 +2,7 @@ module.exports = (TOKEN) => {
   const discord = require("discord.js");
   const bot = new discord.Client();
   const stickers = require("./lib/stickers");
-  const {starLegendAsync, tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
+  const {sparkAsync, starLegendAsync, tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
   const {prefix} = require("./config");
   const log = require("./lib/log");
   const cloudinary = require("cloudinary");
@@ -34,6 +34,10 @@ module.exports = (TOKEN) => {
   bot.on("message", message => {
     if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
+
+    if (message.content.startsWith(`${prefix}wailord`)) {
+      return replyRoll(message, sparkAsync);
+    }
 
     if (message.content.startsWith(`${prefix}scamlegend`)) {
       return replyRoll(message, starLegendAsync);
