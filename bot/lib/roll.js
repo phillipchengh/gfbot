@@ -39,6 +39,7 @@ module.exports = (() => {
     const SSR = gacha.items.SSR;
 
     const results = {
+      created: gacha.meta.created,
       draws: {},
       SSR: 0,
       SR: 0,
