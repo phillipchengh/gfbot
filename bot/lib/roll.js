@@ -80,11 +80,11 @@ module.exports = (() => {
 
       if (rarity < ratioSSR) {
         draw = rarityRoll(SSR);
-        if (draws.hasOwnProperty(draw.display_name)) {
-          draws[draw.display_name].count++;
+        if (draws.hasOwnProperty(draw.name)) {
+          draws[draw.name].count++;
         } else {
           draw.count = 1;
-          draws[draw.display_name] = draw;
+          draws[draw.name] = draw;
         }
         results.SSR++;
       } else {
