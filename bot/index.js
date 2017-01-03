@@ -32,6 +32,10 @@ module.exports = (TOKEN) => {
   };
 
   bot.on("message", message => {
+    if (message.content.match(/^a(y)*y$/g)) {
+      return message.channel.sendMessage("lmao");
+    }
+
     if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
 
