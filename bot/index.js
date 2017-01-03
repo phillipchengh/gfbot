@@ -55,6 +55,10 @@ module.exports = (TOKEN) => {
       return replyRoll(message, singleAsync);
     }
 
+    if (message.content.startsWith(`${prefix}granblue`)) {
+      return message.channel.sendFile(cloudinary.url("granblue.gif", {width: 125, height: 125}));
+    }
+
     if (message.content.startsWith(`${prefix}stickers`)) {
       return message.channel.sendFile(cloudinary.url("stickers.jpg"));
     }
