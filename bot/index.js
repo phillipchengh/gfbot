@@ -1,6 +1,6 @@
 module.exports = (TOKEN) => {
-  const discord = require("discord.js");
-  const bot = new discord.Client();
+  const eris = require("eris");
+  const bot = new eris(TOKEN);
   const stickers = require("./lib/stickers");
   const {sparkAsync, starLegendAsync, tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
   const {prefix} = require("./config");
@@ -10,11 +10,11 @@ module.exports = (TOKEN) => {
   const replyRoll = (message, rollAndOutput) => {
     rollAndOutput(message)
     .then((reply) => {
-      return message.channel.sendMessage(reply);
+      return bot.createMessage(message.channel.id, reply);
     })
     .catch((e) => {
       log.error(e, {message: message});
-      return message.channel.sendMessage("gfbot exploded :thinking:");
+      return bot.createMessage(message.channel.id, "gfbot exploded :thinking:");
     });
   };
 
@@ -23,15 +23,16 @@ module.exports = (TOKEN) => {
     stickers.getAsync(command)
     .then((url) => {
       if (url === null) return;
-      return message.channel.sendFile(url, "", stickerMessage(message));
+      return bot.createMessage(message.channel.id, {content: stickerMessage(message), attachment: {type: "image", image: {url: url}}});
+      // return message.channel.sendFile(url, "", stickerMessage(message));
     })
     .catch((e) => {
       log.error(e, {message: message});
-      return message.channel.sendMessage("gfbot exploded :thinking:");
+      return bot.createMessage(message.channel.id, "gfbot exploded :thinking:");
     });
   };
 
-  bot.on("message", message => {
+  bot.on("messageCreate", message => {
     if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return;
 
@@ -57,16 +58,12 @@ module.exports = (TOKEN) => {
 
     if (message.content.startsWith(`${prefix}roll`)) {
       const number = Math.floor(Math.random() * 100) + 1;
-      return message.channel.sendMessage(`${message.author} rolled a ${number}`);
+      const name = message.author.nickname ? message.author.nickname : message.author.name;
+      return message.channel.sendMessage(`${name} rolled a ${number}`);
     }
     
     return replyIfSticker(message);
   });
 
-  bot.on("disconnect", (msg, code) => {
-    log.disconnect({msg: msg, code: code});
-    process.exit();
-  });
-
-  bot.login(TOKEN);
+  bot.connect();
 };
