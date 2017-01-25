@@ -82,7 +82,7 @@ gulp.task("add_chars", () => {
     data.forEach((count) => {
       total += count;
     });
-    gutil.log(`Added ${total} characters`);
+    gutil.log(`Added ${total} character(s)`);
     return redis.quit();
   })
   .catch((e) => {
@@ -119,7 +119,7 @@ gulp.task("import_chars", () => {
     data.forEach((count) => {
       total += count;
     });
-    gutil.log(`Added ${total} characters`);
+    gutil.log(`Added ${total} character(s)`);
     return redis.quit();
   })
   .catch((e) => {
@@ -204,7 +204,7 @@ gulp.task("add_sticker", () => {
     return redis.hsetAsync("stickers", argv.alias, argv.url);
   }) 
   .then((data) => {
-    gutil.log(`Added ${data} sticker`);
+    gutil.log(`Added ${data} sticker(s)`);
     return redis.quit(); 
   })
   .catch((e) => {
