@@ -4,6 +4,8 @@ const Promise = require("bluebird");
 Promise.promisifyAll(require("fs"));
 const fs = require("fs");
 Promise.promisifyAll(require("redis"));
+const request = require("request");
+Promise.promisifyAll(require("request"));
 const parse = require("./lib/parse");
 
 gulp.task("ayy", () => {
@@ -186,3 +188,27 @@ gulp.task("update_gacha", () => {
     redis.quit();
   });
 });
+
+// set sticker
+gulp.task("add_sticker", () => {
+  const argv =
+  require('yargs')
+  .usage("Usage: gulp add_sticker -alias [alias] -url [url]")
+  .demandOption(['alias', 'url'])
+  .argv;
+
+  const redis = require("redis").createClient();
+  return request.headAsync(argv.url)
+  .then((res) => {
+    if (!res.headers['content-type'].match(/image/)) throw new Error("URL content-type did not match image");
+    return redis.hsetAsync("stickers", argv.alias, argv.url);
+  }) 
+  .then((data) => {
+    gutil.log(`Added ${data} sticker`);
+    return redis.quit(); 
+  })
+  .catch((e) => {
+    gutil.log("Error adding sticker");
+    gutil.log(e);
+  });
+})
