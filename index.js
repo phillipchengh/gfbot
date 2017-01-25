@@ -7,4 +7,3 @@ require("cloudinary").config({
   secret: process.env.CLOUDINARY_API_SECRET  
 });
 require("./bot")(TOKEN);
-require("./server")();
