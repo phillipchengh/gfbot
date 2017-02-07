@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-nodemon": "NODE_ENV=development nodemon index.js",
-    "dev-forever": "NODE_ENV=development forever -o out.log -e error.log --minUptime 5000 index.js",
-    "forever": "NODE_ENV=production forever -o out.log -e error.log --minUptime 5000 index.js",
+    "pm2": "NODE_ENV=production pm2 index.js",
     "start": "NODE_ENV=production node index.js"
   },
   "repository": {
@@ -26,7 +25,6 @@
   "homepage": "https://github.com/phillipchengh/gfbot#readme",
   "dependencies": {
     "bluebird": "^3.4.6",
-    "cloudinary": "^1.4.6",
     "discord.js": "^10.0.1",
     "dotenv": "^2.0.0",
     "gulp": "^3.9.1",
