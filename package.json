@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-nodemon": "NODE_ENV=development nodemon index.js",
+    "dev-nodemon-win": "set NODE_ENV=development&&nodemon index.js",
     "pm2": "NODE_ENV=production pm2 index.js",
     "start": "NODE_ENV=production node index.js"
   },
@@ -25,7 +26,7 @@
   "homepage": "https://github.com/phillipchengh/gfbot#readme",
   "dependencies": {
     "bluebird": "^3.4.6",
-    "discord.js": "^10.0.1",
+    "discord.js": "^11.0.0",
     "dotenv": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.8",
