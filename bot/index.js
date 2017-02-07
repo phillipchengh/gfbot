@@ -31,7 +31,7 @@ module.exports = (TOKEN) => {
   };
 
   bot.on("message", message => {
-    if (message.content.match(/^a(y)*y$/gi)) {
+    if (message.content.match(/^a+y+$/gi)) {
       return message.channel.sendMessage("lmao");
     }
 
