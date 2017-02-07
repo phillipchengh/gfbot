@@ -54,10 +54,6 @@ module.exports = (TOKEN) => {
       return replyRoll(message, singleAsync);
     }
 
-    if (message.content.startsWith(`${prefix}stickers`)) {
-      return message.channel.sendFile(cloudinary.url("stickers.jpg"));
-    }
-
     if (message.content.startsWith(`${prefix}roll`)) {
       const number = Math.floor(Math.random() * 100) + 1;
       return message.channel.sendMessage(`${message.author} rolled a ${number}`);
