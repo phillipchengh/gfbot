@@ -115,13 +115,16 @@ module.exports = (() => {
                   'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.',
                   'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.'];
 
+    const name = message.member.nickname ? message.member.nickname : message.author.username;
+
     const question = message.content.substr(message.content.indexOf(" ") + 1);
     if (question === "!8ball") {
-      return message.channel.sendMessage(`:8ball: Ask me a question ${message.author}`);
+      return message.channel.sendMessage(`:8ball: ` + `\`Ask me a question ${name}\``);
     }
+
     const response = responses[Math.floor(Math.random() * responses.length)];
-    message.channel.sendMessage(`:question: ${question}`);
-    return message.channel.sendMessage(`:8ball: ${response}`);
+    message.channel.sendMessage(`:question: ` + `\`${question}\``);
+    return message.channel.sendMessage(`:8ball: ` + `\`${response}\``);
   }
 
   const formatStickerMessage = (message) => {
