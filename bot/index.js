@@ -2,7 +2,7 @@ module.exports = (TOKEN) => {
   const discord = require("discord.js");
   const bot = new discord.Client();
   const stickers = require("./lib/stickers");
-  const {sparkAsync, starLegendAsync, tenPartAsync, singleAsync, stickerMessage} = require("./lib/output");
+  const {sparkAsync, starLegendAsync, tenPartAsync, singleAsync, eightBallMessage, stickerMessage} = require("./lib/output");
   const {prefix} = require("./config");
   const log = require("./lib/log");
 
@@ -16,6 +16,10 @@ module.exports = (TOKEN) => {
       return message.channel.sendMessage("gfbot exploded :thinking:");
     });
   };
+
+  const replyEightBall = (message) => {
+    return eightBallMessage(message);
+  }
 
   const replyIfSticker = (message) => {
     const command = message.content.split(" ")[0].substring(1).toLowerCase();
@@ -70,19 +74,12 @@ module.exports = (TOKEN) => {
     }
 
     if (message.content.startsWith(`${prefix}8ball`)) {
-      var responses = ['It is certain.', 'It is decidedly so', 'Without a doubt.',
-                        'Yes, definitely.', 'You may rely on it.', 'As I see it, yes.',
-                        'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.',
-                        'Reply hazy try again.', 'Ask again later.', 'Better not tell you now.',
-                        'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.',
-                        'My reply is no.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful'];
-      const question = message.content.substr(message.content.indexOf(" ") + 1);
-      if (question === "!8ball") {
-        return message.channel.sendMessage(`Ask the Magic 8 Ball a question ${message.author}`);
-      }
-      const response = responses[Math.floor(Math.random() * responses.length)];
-      message.channel.sendMessage(`${message.author} asked the Magic 8 Ball: ${question}`);
-      return message.channel.sendMessage(`The Magic 8 Ball says: ${response}`);
+      return replyEightBall(message);
+    }
+
+    if (message.content.startsWith(`${prefix}vanishment`)) {
+      return message.channel.sendMessage(`${message.author}                             ${message.author}\'s crystals
+              \n∩ ͡° ͜ʖ ͡°)⊃━☆ﾟ. * ･ ｡ﾟ, * ヽ(ﾟДﾟ)ﾉ`);
     }
     
     return replyIfSticker(message);
