@@ -119,12 +119,11 @@ module.exports = (() => {
 
     const question = message.content.substr(message.content.indexOf(" ") + 1);
     if (question === "!8ball") {
-      return message.channel.sendMessage(`:8ball: ` + `\`Ask me a question ${name}\``);
+      return message.channel.sendMessage(`:8ball: Ask me a question ${name}.`);
     }
 
     const response = responses[Math.floor(Math.random() * responses.length)];
-    message.channel.sendMessage(`:question: ` + `\`${question}\``);
-    return message.channel.sendMessage(`:8ball: ` + `\`${response}\``);
+    return message.channel.sendMessage(`:question: ${question}\n\n:8ball: ${response}`);
   }
 
   const formatStickerMessage = (message) => {
